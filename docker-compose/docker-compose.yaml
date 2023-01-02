@@ -19,19 +19,21 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: rsearch
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_URL: mongodb://rsearch:password@database:27017/
-#
-#  rsearch-server:
-#    image: rsearch-server:latest
-#    build:
-#      dockerfile: ../server/deploy/dockerfiles/dockerfile
-#      context: ../server
-#    ports:
-#      - "8080:8080"
-#
-#  rsearch-ui:
-#    image: rsearch-ui:latest
-#    build:
-#      dockerfile: ../ui/deploy/dockerfiles/dockerfile
-#      context: ../ui
-#    ports:
-#      - "80:80"
+
+  rsearch-server:
+    image: rsearch-server:latest
+    build:
+      dockerfile: ../server/deploy/dockerfiles/dockerfile
+      context: ../server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+  rsearch-ui:
+    image: rsearch-ui:latest
+    build:
+      dockerfile: ../ui/deploy/dockerfiles/dockerfile
+      context: ../ui
+    ports:
+      - "3000:3000"

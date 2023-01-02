@@ -1,5 +1,22 @@
-FROM rust:latest
+FROM rust:latest as builder
 
 WORKDIR /app
 
 COPY . /app
+
+RUN cargo build --release
+
+FROM rust:latest as runner
+
+WORKDIR /srv
+
+EXPOSE 8080
+
+COPY ./deploy/dockerfiles/entrypoint.sh /docker.init.d/entrypoint.sh
+COPY ./dataset /srv/dataset
+COPY ./scripts /srv/scripts
+COPY --from=builder /app/target/release/rsearch-server /srv
+
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y python3-pip
+
+ENTRYPOINT ["/bin/sh", "/docker.init.d/entrypoint.sh"]

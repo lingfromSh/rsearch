@@ -8,4 +8,6 @@ edition = "2021"
 [dependencies]
 actix-web = "4.2.1"
 serde = { version = "1.0", features = ["derive"] }
+mongodb = { version="2.3.1" }
+futures = "0.3.25"
 tantivy = "0.19.0"

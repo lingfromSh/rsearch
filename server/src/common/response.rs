@@ -3,9 +3,11 @@ use actix_web::{HttpResponse, http::header::{ContentType}};
 
 #[derive(Serialize, Deserialize)]
 pub struct PaginationInfo {
-    // 当前页码
+    // current page index
     pub page_index: u32,
+    // total count of pages
     pub page_total: u32,
+    // size of each page
     pub page_size: u32,
 }
 
@@ -22,6 +24,9 @@ impl<D: Serialize> RSearchHttpJsonResponse<D> {
             page_info,
             data,
         };
-        HttpResponse::Ok().content_type(ContentType::json()).json(body)
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .insert_header(("Access-Control-Allow-Origin", "*"))
+            .json(body)
     }
 }

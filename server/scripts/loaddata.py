@@ -42,8 +42,9 @@ async def load_data():
         plot = mongoengine.StringField()
         meta = {"collection": "movie"}
 
-    m_client = AsyncIOMotorClient("mongodb://rsearch:password@localhost:27017")
-    db = m_client.db
+    m_client = AsyncIOMotorClient("mongodb://rsearch:password@database:27017")
+    db = m_client.rsearch
+    await db.movie.create_index([("plot", "text"), ("title", "text")])
     reader = csv.reader(open("../dataset/wiki_movie_plots_deduped.csv"))
     labels = ["release_year", "title", "origin", "director", "cast", "genre", "wiki_page", "plot"]
     rows = []
@@ -56,7 +57,6 @@ async def load_data():
         data["cast"] = data.get("cast").split(",")
         data["director"] = data.get("director").split(",")
         movie = MovieDocument(**data)
-        print(movie, dict(zip(labels, row)))
         movie.validate()
         rows.append(movie.to_mongo())
 
